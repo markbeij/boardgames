@@ -10,7 +10,7 @@ class ClassicRules implements CheckerRules {
   const ClassicRules();
 
   @override
-  int get initialBoardSize => 50;
+  int get initialBoardSize => 100;
 
   @override
   int get initialPlayerCount => 2;
@@ -37,35 +37,40 @@ class CheckersBlocFactory {
     return initialState;
   }
 
-  static CheckersBoardBloc createClassicCheckersGame() {
+  static CheckersBoardBloc createClassicCheckersGameBloc() {
     const rules = ClassicRules();
+
+    final initialState = createClassicCheckersGameState(rules);
+
+    return CheckersBoardBloc(rules, initialState);
+  }
+
+  static void _addDisks(CheckersBoardStateBuilder state, int from, int till, PlayerBuilder player) {
+    for (var i = from; i < till; i++) {
+      var ii = i ~/ 10 % 2 == 1;
+      if (ii && i.isOdd || !ii && i.isEven) continue;
+
+      final field = state.fields[i].toBuilder();
+
+      final disk = DiskBuilder();
+      disk.player = player;
+      field.disk = disk;
+
+      state.fields[i] = field.build();
+    }
+  }
+
+  static CheckersBoardState createClassicCheckersGameState(CheckerRules rules) {
     final initialState = _createInitialState(rules);
 
     final p1 = initialState.players[0].toBuilder();
     final p2 = initialState.players[1].toBuilder();
 
     //Put disks on the fields for player one
-    for (var i = 0; i < 20; i++) {
-      final field = initialState.fields[i].toBuilder();
-
-      final disk = DiskBuilder();
-      disk.player = p1;
-      field.disk = disk;
-
-      initialState.fields[i] = field.build();
-    }
-
+    _addDisks(initialState, 0, 40, p1);
     //Put disks on the fields for player two
-    for (var i = 30; i < 50; i++) {
-      final field = initialState.fields[i].toBuilder();
+    _addDisks(initialState, rules.initialBoardSize - 40, rules.initialBoardSize, p2);
 
-      final disk = DiskBuilder();
-      disk.player = p2;
-      field.disk = disk;
-
-      initialState.fields[i] = field.build();
-    }
-
-    return CheckersBoardBloc(rules, initialState.build());
+    return initialState.build();
   }
 }

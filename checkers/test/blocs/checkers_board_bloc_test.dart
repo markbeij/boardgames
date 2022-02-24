@@ -28,7 +28,7 @@ void main() {
       'emits [1] when ResetCheckersBoardEvent is added',
       build: () => CheckersBoardBloc(const ClassicRules(), CheckersBoardState((b) => b)),
       act: (CheckersBoardBloc bloc) => bloc.add(ResetCheckersBoardEvent()),
-      expect: () => [CheckersBoardState((b) => b)],
+      expect: () => [CheckersBlocFactory.createClassicCheckersGameState(const ClassicRules())],
     );
   });
 }
