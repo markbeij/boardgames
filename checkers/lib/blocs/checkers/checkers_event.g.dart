@@ -22,7 +22,8 @@ class _$MoveEventSerializer implements StructuredSerializer<MoveEvent> {
     final result = <Object?>[
       'hops',
       serializers.serialize(object.hops,
-          specifiedType: const FullType(List, const [const FullType(int)])),
+          specifiedType:
+              const FullType(BuiltList, const [const FullType(int)])),
     ];
 
     return result;
@@ -40,10 +41,10 @@ class _$MoveEventSerializer implements StructuredSerializer<MoveEvent> {
       final Object? value = iterator.current;
       switch (key) {
         case 'hops':
-          result.hops = serializers.deserialize(value,
+          result.hops.replace(serializers.deserialize(value,
                   specifiedType:
-                      const FullType(List, const [const FullType(int)]))
-              as List<int>;
+                      const FullType(BuiltList, const [const FullType(int)]))!
+              as BuiltList<Object?>);
           break;
       }
     }
@@ -79,7 +80,7 @@ class _$ResetCheckersBoardEventSerializer
 
 class _$MoveEvent extends MoveEvent {
   @override
-  final List<int> hops;
+  final BuiltList<int> hops;
 
   factory _$MoveEvent([void Function(MoveEventBuilder)? updates]) =>
       (new MoveEventBuilder()..update(updates)).build();
@@ -116,16 +117,16 @@ class _$MoveEvent extends MoveEvent {
 class MoveEventBuilder implements Builder<MoveEvent, MoveEventBuilder> {
   _$MoveEvent? _$v;
 
-  List<int>? _hops;
-  List<int>? get hops => _$this._hops;
-  set hops(List<int>? hops) => _$this._hops = hops;
+  ListBuilder<int>? _hops;
+  ListBuilder<int> get hops => _$this._hops ??= new ListBuilder<int>();
+  set hops(ListBuilder<int>? hops) => _$this._hops = hops;
 
   MoveEventBuilder();
 
   MoveEventBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
-      _hops = $v.hops;
+      _hops = $v.hops.toBuilder();
       _$v = null;
     }
     return this;
@@ -144,10 +145,20 @@ class MoveEventBuilder implements Builder<MoveEvent, MoveEventBuilder> {
 
   @override
   _$MoveEvent build() {
-    final _$result = _$v ??
-        new _$MoveEvent._(
-            hops: BuiltValueNullFieldError.checkNotNull(
-                hops, 'MoveEvent', 'hops'));
+    _$MoveEvent _$result;
+    try {
+      _$result = _$v ?? new _$MoveEvent._(hops: hops.build());
+    } catch (_) {
+      late String _$failedField;
+      try {
+        _$failedField = 'hops';
+        hops.build();
+      } catch (e) {
+        throw new BuiltValueNestedFieldError(
+            'MoveEvent', _$failedField, e.toString());
+      }
+      rethrow;
+    }
     replace(_$result);
     return _$result;
   }

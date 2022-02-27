@@ -48,7 +48,7 @@ class CheckersBoardBloc extends Bloc<CheckersBoardEvent, CheckersBoardState> {
           //Check if disk is moved one place diagonal forwards
           if (disk.player.name == 'Player_1') {
             if (event.hops[i] != event.hops[i - 1] + 9 && event.hops[i] != event.hops[i - 1] + 11) {
-              log('Invalid move (from ${event.hops[i - 1]} to ${event.hops[i]}');
+              log('Invalid move (from ${event.hops[i - 1]} to ${event.hops[i]})');
               return;
             }
           }
