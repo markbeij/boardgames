@@ -1,8 +1,16 @@
+import 'package:checkers/blocs/simple_bloc_observer.dart';
 import 'package:checkers/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
-  runApp(const MyApp());
+  BlocOverrides.runZoned(
+    () {
+      runApp(const MyApp());
+    },
+    blocObserver: SimpleBlocObserver(),
+    // eventTransformer: customEventTransformer(),
+  );
 }
 
 class MyApp extends StatelessWidget {

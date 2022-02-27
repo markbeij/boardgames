@@ -8,6 +8,25 @@ part 'checkers_event.g.dart';
 
 abstract class CheckersBoardEvent {}
 
+abstract class MoveEvent implements CheckersBoardEvent, Built<MoveEvent, MoveEventBuilder> {
+  // Fields
+  List<int> get hops;
+
+  MoveEvent._();
+
+  factory MoveEvent([void Function(MoveEventBuilder) updates]) = _$MoveEvent;
+
+  String toJson() {
+    return json.encode(serializers.serializeWith(MoveEvent.serializer, this));
+  }
+
+  static MoveEvent fromJson(String jsonString) {
+    return serializers.deserializeWith(MoveEvent.serializer, json.decode(jsonString))!;
+  }
+
+  static Serializer<MoveEvent> get serializer => _$moveEventSerializer;
+}
+
 abstract class ResetCheckersBoardEvent implements CheckersBoardEvent, Built<ResetCheckersBoardEvent, ResetCheckersBoardEventBuilder> {
   // Fields
 

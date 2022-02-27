@@ -11,6 +11,7 @@ abstract class CheckersBoardState implements Built<CheckersBoardState, CheckersB
   // Fields
   BuiltList<Field> get fields;
   BuiltList<Player> get players;
+  Player get activePlayer;
 
   CheckersBoardState._();
 
@@ -49,6 +50,7 @@ abstract class Field implements Built<Field, FieldBuilder> {
 abstract class Disk implements Built<Disk, DiskBuilder> {
   // Fields
   Player get player;
+  bool get isKing;
 
   Disk._();
 
@@ -63,6 +65,9 @@ abstract class Disk implements Built<Disk, DiskBuilder> {
   }
 
   static Serializer<Disk> get serializer => _$diskSerializer;
+
+  //Set default values
+  static void _initializeBuilder(DiskBuilder builder) => builder..isKing = false;
 }
 
 abstract class Player implements Built<Player, PlayerBuilder> {

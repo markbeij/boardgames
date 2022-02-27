@@ -32,6 +32,9 @@ class _$CheckersBoardStateSerializer
       serializers.serialize(object.players,
           specifiedType:
               const FullType(BuiltList, const [const FullType(Player)])),
+      'activePlayer',
+      serializers.serialize(object.activePlayer,
+          specifiedType: const FullType(Player)),
     ];
 
     return result;
@@ -60,6 +63,10 @@ class _$CheckersBoardStateSerializer
                   specifiedType: const FullType(
                       BuiltList, const [const FullType(Player)]))!
               as BuiltList<Object?>);
+          break;
+        case 'activePlayer':
+          result.activePlayer.replace(serializers.deserialize(value,
+              specifiedType: const FullType(Player))! as Player);
           break;
       }
     }
@@ -124,6 +131,8 @@ class _$DiskSerializer implements StructuredSerializer<Disk> {
       'player',
       serializers.serialize(object.player,
           specifiedType: const FullType(Player)),
+      'isKing',
+      serializers.serialize(object.isKing, specifiedType: const FullType(bool)),
     ];
 
     return result;
@@ -143,6 +152,10 @@ class _$DiskSerializer implements StructuredSerializer<Disk> {
         case 'player':
           result.player.replace(serializers.deserialize(value,
               specifiedType: const FullType(Player))! as Player);
+          break;
+        case 'isKing':
+          result.isKing = serializers.deserialize(value,
+              specifiedType: const FullType(bool)) as bool;
           break;
       }
     }
@@ -195,17 +208,22 @@ class _$CheckersBoardState extends CheckersBoardState {
   final BuiltList<Field> fields;
   @override
   final BuiltList<Player> players;
+  @override
+  final Player activePlayer;
 
   factory _$CheckersBoardState(
           [void Function(CheckersBoardStateBuilder)? updates]) =>
       (new CheckersBoardStateBuilder()..update(updates)).build();
 
-  _$CheckersBoardState._({required this.fields, required this.players})
+  _$CheckersBoardState._(
+      {required this.fields, required this.players, required this.activePlayer})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
         fields, 'CheckersBoardState', 'fields');
     BuiltValueNullFieldError.checkNotNull(
         players, 'CheckersBoardState', 'players');
+    BuiltValueNullFieldError.checkNotNull(
+        activePlayer, 'CheckersBoardState', 'activePlayer');
   }
 
   @override
@@ -222,19 +240,22 @@ class _$CheckersBoardState extends CheckersBoardState {
     if (identical(other, this)) return true;
     return other is CheckersBoardState &&
         fields == other.fields &&
-        players == other.players;
+        players == other.players &&
+        activePlayer == other.activePlayer;
   }
 
   @override
   int get hashCode {
-    return $jf($jc($jc(0, fields.hashCode), players.hashCode));
+    return $jf($jc(
+        $jc($jc(0, fields.hashCode), players.hashCode), activePlayer.hashCode));
   }
 
   @override
   String toString() {
     return (newBuiltValueToStringHelper('CheckersBoardState')
           ..add('fields', fields)
-          ..add('players', players))
+          ..add('players', players)
+          ..add('activePlayer', activePlayer))
         .toString();
   }
 }
@@ -252,6 +273,12 @@ class CheckersBoardStateBuilder
       _$this._players ??= new ListBuilder<Player>();
   set players(ListBuilder<Player>? players) => _$this._players = players;
 
+  PlayerBuilder? _activePlayer;
+  PlayerBuilder get activePlayer =>
+      _$this._activePlayer ??= new PlayerBuilder();
+  set activePlayer(PlayerBuilder? activePlayer) =>
+      _$this._activePlayer = activePlayer;
+
   CheckersBoardStateBuilder();
 
   CheckersBoardStateBuilder get _$this {
@@ -259,6 +286,7 @@ class CheckersBoardStateBuilder
     if ($v != null) {
       _fields = $v.fields.toBuilder();
       _players = $v.players.toBuilder();
+      _activePlayer = $v.activePlayer.toBuilder();
       _$v = null;
     }
     return this;
@@ -281,7 +309,9 @@ class CheckersBoardStateBuilder
     try {
       _$result = _$v ??
           new _$CheckersBoardState._(
-              fields: fields.build(), players: players.build());
+              fields: fields.build(),
+              players: players.build(),
+              activePlayer: activePlayer.build());
     } catch (_) {
       late String _$failedField;
       try {
@@ -289,6 +319,8 @@ class CheckersBoardStateBuilder
         fields.build();
         _$failedField = 'players';
         players.build();
+        _$failedField = 'activePlayer';
+        activePlayer.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'CheckersBoardState', _$failedField, e.toString());
@@ -386,12 +418,15 @@ class FieldBuilder implements Builder<Field, FieldBuilder> {
 class _$Disk extends Disk {
   @override
   final Player player;
+  @override
+  final bool isKing;
 
   factory _$Disk([void Function(DiskBuilder)? updates]) =>
       (new DiskBuilder()..update(updates)).build();
 
-  _$Disk._({required this.player}) : super._() {
+  _$Disk._({required this.player, required this.isKing}) : super._() {
     BuiltValueNullFieldError.checkNotNull(player, 'Disk', 'player');
+    BuiltValueNullFieldError.checkNotNull(isKing, 'Disk', 'isKing');
   }
 
   @override
@@ -404,17 +439,19 @@ class _$Disk extends Disk {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is Disk && player == other.player;
+    return other is Disk && player == other.player && isKing == other.isKing;
   }
 
   @override
   int get hashCode {
-    return $jf($jc(0, player.hashCode));
+    return $jf($jc($jc(0, player.hashCode), isKing.hashCode));
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('Disk')..add('player', player))
+    return (newBuiltValueToStringHelper('Disk')
+          ..add('player', player)
+          ..add('isKing', isKing))
         .toString();
   }
 }
@@ -426,12 +463,19 @@ class DiskBuilder implements Builder<Disk, DiskBuilder> {
   PlayerBuilder get player => _$this._player ??= new PlayerBuilder();
   set player(PlayerBuilder? player) => _$this._player = player;
 
-  DiskBuilder();
+  bool? _isKing;
+  bool? get isKing => _$this._isKing;
+  set isKing(bool? isKing) => _$this._isKing = isKing;
+
+  DiskBuilder() {
+    Disk._initializeBuilder(this);
+  }
 
   DiskBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
       _player = $v.player.toBuilder();
+      _isKing = $v.isKing;
       _$v = null;
     }
     return this;
@@ -452,7 +496,11 @@ class DiskBuilder implements Builder<Disk, DiskBuilder> {
   _$Disk build() {
     _$Disk _$result;
     try {
-      _$result = _$v ?? new _$Disk._(player: player.build());
+      _$result = _$v ??
+          new _$Disk._(
+              player: player.build(),
+              isKing: BuiltValueNullFieldError.checkNotNull(
+                  isKing, 'Disk', 'isKing'));
     } catch (_) {
       late String _$failedField;
       try {

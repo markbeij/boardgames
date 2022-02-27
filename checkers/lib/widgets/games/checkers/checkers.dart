@@ -47,10 +47,20 @@ class CheckersWidget extends StatelessWidget {
             }),
           ),
           InkWell(
+            child: const Text('Move'),
+            onTap: () {
+              BlocProvider.of<CheckersBoardBloc>(context).add(MoveEvent((b) => b..hops = [38, 49]));
+            },
+          ),
+          InkWell(
             child: const Text('Reset'),
             onTap: () {
               BlocProvider.of<CheckersBoardBloc>(context).add(ResetCheckersBoardEvent());
             },
+          ),
+          Text(
+            "It's ${state.activePlayer.name}'s turn",
+            style: TextStyle(color: state.activePlayer.name == 'Player_1' ? Colors.green : Colors.blue),
           ),
         ]);
       }),

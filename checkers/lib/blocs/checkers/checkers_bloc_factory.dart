@@ -25,11 +25,12 @@ class CheckersBlocFactory {
 
     for (var i = 0; i < rules.initialPlayerCount; i++) {
       final player = PlayerBuilder();
-      player.name = 'Player_$i';
+      player.name = 'Player_${i + 1}';
       players.add(player.build());
     }
 
     initialState.players = players;
+    initialState.activePlayer = players[0].toBuilder();
 
     //Create empty fields
     initialState.fields = ListBuilder(List.filled(rules.initialBoardSize, FieldBuilder().build()));
