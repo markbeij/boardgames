@@ -21,15 +21,15 @@ void main() {
 
     blocTest(
       'emits [] when nothing is added',
-      build: () => BoardGameBloc(const ClassicRules(100)),
+      build: () => BoardGameBloc(ClassicRules(100)),
       expect: () => [],
     );
 
     blocTest(
       'emits [1] when ResetCheckersBoardEvent is added',
-      build: () => BoardGameBloc(const ClassicRules(100)),
+      build: () => BoardGameBloc(ClassicRules(100)),
       act: (BoardGameBloc bloc) => bloc.add(ResetCheckersBoardEvent()),
-      expect: () => [const ClassicRules(100).createInitialState()],
+      expect: () => [ClassicRules(100).createInitialState()],
     );
   });
 }

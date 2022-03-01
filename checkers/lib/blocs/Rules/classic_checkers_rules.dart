@@ -8,7 +8,12 @@ class ClassicRules implements RulesBase {
   final int _initialBoardSize;
   final int _initialPlayerCount = 2;
 
-  const ClassicRules(this._initialBoardSize);
+  ClassicRules(this._initialBoardSize) {
+    final d = sqrt(this._initialBoardSize);
+    if (d != d.roundToDouble()) {
+      throw ArgumentError('The root of _initialBoardSize should be a round number', '_initialBoardSize');
+    }
+  }
 
   @override
   int get initialBoardSize => _initialBoardSize;
