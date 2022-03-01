@@ -32,11 +32,15 @@ class _$CheckersBoardStateSerializer
       serializers.serialize(object.players,
           specifiedType:
               const FullType(BuiltList, const [const FullType(Player)])),
-      'activePlayer',
-      serializers.serialize(object.activePlayer,
-          specifiedType: const FullType(Player)),
     ];
-
+    Object? value;
+    value = object.activePlayer;
+    if (value != null) {
+      result
+        ..add('activePlayer')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(Player)));
+    }
     return result;
   }
 
@@ -209,21 +213,19 @@ class _$CheckersBoardState extends CheckersBoardState {
   @override
   final BuiltList<Player> players;
   @override
-  final Player activePlayer;
+  final Player? activePlayer;
 
   factory _$CheckersBoardState(
           [void Function(CheckersBoardStateBuilder)? updates]) =>
       (new CheckersBoardStateBuilder()..update(updates)).build();
 
   _$CheckersBoardState._(
-      {required this.fields, required this.players, required this.activePlayer})
+      {required this.fields, required this.players, this.activePlayer})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
         fields, 'CheckersBoardState', 'fields');
     BuiltValueNullFieldError.checkNotNull(
         players, 'CheckersBoardState', 'players');
-    BuiltValueNullFieldError.checkNotNull(
-        activePlayer, 'CheckersBoardState', 'activePlayer');
   }
 
   @override
@@ -286,7 +288,7 @@ class CheckersBoardStateBuilder
     if ($v != null) {
       _fields = $v.fields.toBuilder();
       _players = $v.players.toBuilder();
-      _activePlayer = $v.activePlayer.toBuilder();
+      _activePlayer = $v.activePlayer?.toBuilder();
       _$v = null;
     }
     return this;
@@ -311,7 +313,7 @@ class CheckersBoardStateBuilder
           new _$CheckersBoardState._(
               fields: fields.build(),
               players: players.build(),
-              activePlayer: activePlayer.build());
+              activePlayer: _activePlayer?.build());
     } catch (_) {
       late String _$failedField;
       try {
@@ -320,7 +322,7 @@ class CheckersBoardStateBuilder
         _$failedField = 'players';
         players.build();
         _$failedField = 'activePlayer';
-        activePlayer.build();
+        _activePlayer?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'CheckersBoardState', _$failedField, e.toString());

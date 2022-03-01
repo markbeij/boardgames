@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:checkers/blocs/Rules/classic_checkers_rules.dart';
 import 'package:checkers/blocs/checkers/checkers.dart';
 import 'package:checkers/blocs/move/move.dart';
 import 'package:checkers/widgets/games/checkers/disk.dart';
@@ -13,7 +14,7 @@ class CheckersWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<CheckersBoardBloc>(create: (context) => CheckersBlocFactory.createClassicCheckersGameBloc()),
+        BlocProvider<CheckersBoardBloc>(create: (context) => CheckersBoardBloc(const ClassicRules())),
         BlocProvider<MoveBloc>(create: (context) => MoveBloc(MoveState())),
       ],
       child: Column(children: [
@@ -73,8 +74,8 @@ class CheckersWidget extends StatelessWidget {
               },
             ),
             Text(
-              "It's ${state.activePlayer.name}'s turn",
-              style: TextStyle(color: state.activePlayer.name == 'Player_1' ? Colors.green : Colors.blue),
+              "It's ${state.activePlayer?.name}'s turn",
+              style: TextStyle(color: state.activePlayer?.name == 'Player_1' ? Colors.green : Colors.blue),
             ),
           ]);
         }),

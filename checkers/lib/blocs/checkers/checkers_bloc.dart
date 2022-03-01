@@ -1,13 +1,14 @@
 import 'dart:developer';
 
+import 'package:checkers/blocs/Rules/rules_base.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'checkers.dart';
 
 class CheckersBoardBloc extends Bloc<CheckersBoardEvent, CheckersBoardState> {
-  CheckersBoardBloc(CheckerRules rules, CheckersBoardState initialState) : super(initialState) {
+  CheckersBoardBloc(RulesBase rules) : super(rules.createInitialState()) {
     on<ResetCheckersBoardEvent>((event, emit) {
-      emit(CheckersBlocFactory.createClassicCheckersGameState(rules));
+      emit(rules.createInitialState());
     });
     on<MoveEvent>((event, emit) {
       if (event.hops.isEmpty) {
@@ -27,7 +28,7 @@ class CheckersBoardBloc extends Bloc<CheckersBoardEvent, CheckersBoardState> {
       }
 
       if (disk.player != state.activePlayer) {
-        log('Disk does not belong to active player. Disk belongs to ${disk.player.name} and active player is ${state.activePlayer.name}');
+        log('Disk does not belong to active player. Disk belongs to ${disk.player.name} and active player is ${state.activePlayer?.name}');
         return;
       }
 

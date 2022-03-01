@@ -11,7 +11,7 @@ abstract class CheckersBoardState implements Built<CheckersBoardState, CheckersB
   // Fields
   BuiltList<Field> get fields;
   BuiltList<Player> get players;
-  Player get activePlayer;
+  Player? get activePlayer;
 
   CheckersBoardState._();
 
