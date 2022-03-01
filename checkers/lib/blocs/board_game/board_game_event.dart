@@ -5,11 +5,11 @@ import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:checkers/serializers.dart';
 
-part 'checkers_event.g.dart';
+part 'board_game_event.g.dart';
 
-abstract class CheckersBoardEvent {}
+abstract class BoardGameEvent {}
 
-abstract class MoveEvent implements CheckersBoardEvent, Built<MoveEvent, MoveEventBuilder> {
+abstract class MoveEvent implements BoardGameEvent, Built<MoveEvent, MoveEventBuilder> {
   // Fields
   BuiltList<int> get hops;
 
@@ -28,7 +28,7 @@ abstract class MoveEvent implements CheckersBoardEvent, Built<MoveEvent, MoveEve
   static Serializer<MoveEvent> get serializer => _$moveEventSerializer;
 }
 
-abstract class ResetCheckersBoardEvent implements CheckersBoardEvent, Built<ResetCheckersBoardEvent, ResetCheckersBoardEventBuilder> {
+abstract class ResetCheckersBoardEvent implements BoardGameEvent, Built<ResetCheckersBoardEvent, ResetCheckersBoardEventBuilder> {
   // Fields
 
   ResetCheckersBoardEvent._();

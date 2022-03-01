@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'checkers_event.dart';
+part of 'board_game_event.dart';
 
 // **************************************************************************
 // BuiltValueGenerator

@@ -1,11 +1,12 @@
 import 'dart:math';
-
-import 'package:checkers/blocs/Rules/classic_checkers_rules.dart';
-import 'package:checkers/blocs/checkers/checkers.dart';
-import 'package:checkers/blocs/move/move.dart';
-import 'package:checkers/widgets/games/checkers/disk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:checkers/blocs/Rules/classic_checkers_rules.dart';
+import 'package:checkers/blocs/board_game/board_game.dart';
+import 'package:checkers/blocs/move/move.dart';
+
+import 'package:checkers/widgets/games/checkers/disk.dart';
 
 class CheckersWidget extends StatelessWidget {
   const CheckersWidget({Key? key}) : super(key: key);
@@ -14,11 +15,11 @@ class CheckersWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<CheckersBoardBloc>(create: (context) => CheckersBoardBloc(const ClassicRules())),
+        BlocProvider<BoardGameBloc>(create: (context) => BoardGameBloc(const ClassicRules(144))),
         BlocProvider<MoveBloc>(create: (context) => MoveBloc(MoveState())),
       ],
       child: Column(children: [
-        BlocBuilder<CheckersBoardBloc, CheckersBoardState>(builder: (context, state) {
+        BlocBuilder<BoardGameBloc, BoardGameState>(builder: (context, state) {
           final dimensions = sqrt(state.fields.length).toInt();
           return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             Table(
@@ -64,13 +65,13 @@ class CheckersWidget extends StatelessWidget {
               child: const Text('Move'),
               onTap: () {
                 final moveState = BlocProvider.of<MoveBloc>(context).state;
-                BlocProvider.of<CheckersBoardBloc>(context).add(MoveEvent((b) => b..hops.addAll(moveState.hops)));
+                BlocProvider.of<BoardGameBloc>(context).add(MoveEvent((b) => b..hops.addAll(moveState.hops)));
               },
             ),
             InkWell(
               child: const Text('Reset'),
               onTap: () {
-                BlocProvider.of<CheckersBoardBloc>(context).add(ResetCheckersBoardEvent());
+                BlocProvider.of<BoardGameBloc>(context).add(ResetCheckersBoardEvent());
               },
             ),
             Text(

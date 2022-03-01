@@ -1,6 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:checkers/blocs/Rules/classic_checkers_rules.dart';
-import 'package:checkers/blocs/checkers/checkers.dart';
+import 'package:checkers/blocs/board_game/board_game.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -13,23 +13,23 @@ void main() {
     });
 
     test('equality test CheckersBoardState', () {
-      final val1 = CheckersBoardState((b) => b);
-      final val2 = CheckersBoardState((b) => b);
+      final val1 = BoardGameState((b) => b);
+      final val2 = BoardGameState((b) => b);
 
       expect(val1, val2);
     });
 
     blocTest(
       'emits [] when nothing is added',
-      build: () => CheckersBoardBloc(const ClassicRules()),
+      build: () => BoardGameBloc(const ClassicRules(100)),
       expect: () => [],
     );
 
     blocTest(
       'emits [1] when ResetCheckersBoardEvent is added',
-      build: () => CheckersBoardBloc(const ClassicRules()),
-      act: (CheckersBoardBloc bloc) => bloc.add(ResetCheckersBoardEvent()),
-      expect: () => [const ClassicRules().createInitialState()],
+      build: () => BoardGameBloc(const ClassicRules(100)),
+      act: (BoardGameBloc bloc) => bloc.add(ResetCheckersBoardEvent()),
+      expect: () => [const ClassicRules(100).createInitialState()],
     );
   });
 }

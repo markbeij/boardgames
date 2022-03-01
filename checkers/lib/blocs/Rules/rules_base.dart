@@ -1,10 +1,12 @@
+import 'dart:math';
+
 import 'package:built_collection/built_collection.dart';
-import 'package:checkers/blocs/checkers/checkers.dart';
+import 'package:checkers/blocs/board_game/board_game.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 abstract class RulesBaseHelper {
-  static CheckersBoardStateBuilder createInitialStateBase(RulesBase rules) {
-    final initialState = CheckersBoardStateBuilder();
+  static BoardGameStateBuilder createInitialStateBase(RulesBase rules) {
+    final initialState = BoardGameStateBuilder();
 
     //Create players
     final players = ListBuilder<Player>();
@@ -24,9 +26,10 @@ abstract class RulesBaseHelper {
     return initialState;
   }
 
-  static void addDisks(CheckersBoardStateBuilder state, int from, int till, PlayerBuilder player) {
+  static void addDisks(BoardGameStateBuilder state, int from, int till, PlayerBuilder player) {
+    final rowLength = sqrt(state.fields.length).toInt();
     for (var i = from; i < till; i++) {
-      var ii = i ~/ 10 % 2 == 1;
+      var ii = i ~/ rowLength % 2 == 1;
       if (ii && i.isOdd || !ii && i.isEven) continue;
 
       final field = state.fields[i].toBuilder();
@@ -44,6 +47,6 @@ abstract class RulesBase {
   int get initialBoardSize;
   int get initialPlayerCount;
 
-  move(MoveEvent event, Emitter<CheckersBoardState> emit);
-  CheckersBoardState createInitialState();
+  move(MoveEvent event, Emitter<BoardGameState> emit);
+  BoardGameState createInitialState();
 }
