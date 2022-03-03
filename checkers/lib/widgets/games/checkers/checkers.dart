@@ -15,7 +15,10 @@ class CheckersWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<BoardGameBloc>(create: (context) => BoardGameBloc(ClassicRules(64))),
+        BlocProvider<BoardGameBloc>(create: (context) {
+          final rules = ClassicRules(64);
+          return BoardGameBloc(rules, rules.createInitialState());
+        }),
         BlocProvider<MoveBloc>(create: (context) => MoveBloc(MoveState())),
       ],
       child: Column(children: [

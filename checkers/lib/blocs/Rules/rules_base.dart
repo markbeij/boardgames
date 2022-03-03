@@ -47,6 +47,6 @@ abstract class RulesBase {
   int get initialBoardSize;
   int get initialPlayerCount;
 
-  move(MoveEvent event, Emitter<BoardGameState> emit);
+  move(MoveEvent event, Emitter<BoardGameState> emit, BoardGameState state);
   BoardGameState createInitialState();
 }

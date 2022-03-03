@@ -21,13 +21,19 @@ void main() {
 
     blocTest(
       'emits [] when nothing is added',
-      build: () => BoardGameBloc(ClassicRules(100)),
+      build: () {
+        final rules = ClassicRules(100);
+        return BoardGameBloc(rules, rules.createInitialState());
+      },
       expect: () => [],
     );
 
     blocTest(
       'emits [1] when ResetCheckersBoardEvent is added',
-      build: () => BoardGameBloc(ClassicRules(100)),
+      build: () {
+        final rules = ClassicRules(100);
+        return BoardGameBloc(rules, rules.createInitialState());
+      },
       act: (BoardGameBloc bloc) => bloc.add(ResetCheckersBoardEvent()),
       expect: () => [ClassicRules(100).createInitialState()],
     );
