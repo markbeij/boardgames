@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:math' as math;
 
 import 'package:checkers/blocs/Rules/rules_base.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -47,8 +48,9 @@ class BoardGameBloc extends Bloc<BoardGameEvent, BoardGameState> {
             log('Invalid move, field ${event.hops[i]} is occupied');
           }
           //Check if disk is moved one place diagonal forwards
+          final rowLength = math.sqrt(state.fields.length);
           if (disk.player.name == 'Player_1') {
-            if (event.hops[i] != event.hops[i - 1] + 9 && event.hops[i] != event.hops[i - 1] + 11) {
+            if (event.hops[i] != event.hops[i - 1] + rowLength - 1 && event.hops[i] != event.hops[i - 1] + rowLength + 1) {
               log('Invalid move (from ${event.hops[i - 1]} to ${event.hops[i]})');
               return;
             }
