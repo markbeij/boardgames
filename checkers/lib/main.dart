@@ -1,3 +1,5 @@
+import 'package:checkers/blocs/Rules/classic_checkers_rules.dart';
+import 'package:checkers/blocs/rules/four_in_a_row_rules.dart';
 import 'package:checkers/blocs/simple_bloc_observer.dart';
 import 'package:checkers/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -116,13 +118,25 @@ class _MyHomePageState extends State<MyHomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const GamePageWidget(
+                        builder: (context) => GamePageWidget(
                               title: 'Classic Checkers',
-                              child: CheckersWidget(),
+                              child: CheckersWidget(rules: ClassicCheckersRules(64)),
                             )),
                   );
                 },
-                child: const Text('Checkers'))
+                child: const Text('Checkers')),
+            TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => GamePageWidget(
+                              title: 'Four in a row',
+                              child: CheckersWidget(rules: FourInARowRules(64)),
+                            )),
+                  );
+                },
+                child: const Text('Four in a row'))
           ],
         ),
       ),

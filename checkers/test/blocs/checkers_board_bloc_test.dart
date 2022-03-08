@@ -1,5 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:checkers/blocs/Rules/classic_checkers_rules.dart';
+import 'package:checkers/blocs/rules/classic_checkers_rules.dart';
 import 'package:checkers/blocs/board_game/board_game.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -22,7 +22,7 @@ void main() {
     blocTest(
       'emits [] when nothing is added',
       build: () {
-        final rules = ClassicRules(100);
+        final rules = ClassicCheckersRules(100);
         return BoardGameBloc(rules, rules.createInitialState());
       },
       expect: () => [],
@@ -31,11 +31,11 @@ void main() {
     blocTest(
       'emits [1] when ResetCheckersBoardEvent is added',
       build: () {
-        final rules = ClassicRules(100);
+        final rules = ClassicCheckersRules(100);
         return BoardGameBloc(rules, rules.createInitialState());
       },
       act: (BoardGameBloc bloc) => bloc.add(ResetCheckersBoardEvent()),
-      expect: () => [ClassicRules(100).createInitialState()],
+      expect: () => [ClassicCheckersRules(100).createInitialState()],
     );
   });
 }

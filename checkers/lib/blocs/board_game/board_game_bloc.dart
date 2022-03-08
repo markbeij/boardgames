@@ -1,4 +1,4 @@
-import 'package:checkers/blocs/Rules/rules_base.dart';
+import 'package:checkers/blocs/rules/rules_base.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'board_game.dart';

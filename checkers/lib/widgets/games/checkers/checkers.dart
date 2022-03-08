@@ -1,22 +1,23 @@
 import 'dart:math';
+import 'package:checkers/blocs/rules/rules_base.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:checkers/blocs/Rules/classic_checkers_rules.dart';
+import 'package:checkers/blocs/rules/classic_checkers_rules.dart';
 import 'package:checkers/blocs/board_game/board_game.dart';
 import 'package:checkers/blocs/move/move.dart';
 
 import 'package:checkers/widgets/games/checkers/disk.dart';
 
 class CheckersWidget extends StatelessWidget {
-  const CheckersWidget({Key? key}) : super(key: key);
+  final RulesBase rules;
+  const CheckersWidget({Key? key, required this.rules}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider<BoardGameBloc>(create: (context) {
-          final rules = ClassicRules(64);
           return BoardGameBloc(rules, rules.createInitialState());
         }),
         BlocProvider<MoveBloc>(create: (context) => MoveBloc(MoveState())),
@@ -50,9 +51,9 @@ class CheckersWidget extends StatelessWidget {
                             color: color,
                             alignment: Alignment.center,
                             child: Stack(children: [
-                              if (state.fields[index].disk != null)
+                              if (state.fields[index].items.isNotEmpty)
                                 DiskWidget(
-                                  color: state.fields[index].disk!.player.name == 'Player_1' ? Colors.green : Colors.blue,
+                                  color: (state.fields[index].items.first as Disk).player.name == 'Player_1' ? Colors.green : Colors.blue,
                                   onTap: () {
                                     BlocProvider.of<MoveBloc>(context).add(ResetHopsEvent());
                                     BlocProvider.of<MoveBloc>(context).add(AddHopEvent((b) => b.hop = index));

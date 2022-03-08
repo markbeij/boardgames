@@ -30,8 +30,7 @@ abstract class BoardGameState implements Built<BoardGameState, BoardGameStateBui
 
 abstract class Field implements Built<Field, FieldBuilder> {
   // Fields
-  Disk? get disk;
-  BuiltList<Item<Object>> get items;
+  BuiltList<Object> get items;
 
   Field._();
 
@@ -46,26 +45,6 @@ abstract class Field implements Built<Field, FieldBuilder> {
   }
 
   static Serializer<Field> get serializer => _$fieldSerializer;
-}
-
-abstract class Item<T> implements Built<Item<T>, ItemBuilder<T>> {
-  // Fields
-  Player? get player;
-
-  Item._();
-
-  // factory Item([void Function(Item<T> Builder) updates]) = _$Item;
-  factory Item([void Function(ItemBuilder<T>)? updates]) = _$Item<T>;
-
-  String toJson() {
-    return json.encode(serializers.serializeWith(Item.serializer, this));
-  }
-
-  static Item fromJson(String jsonString) {
-    return serializers.deserializeWith(Item.serializer, json.decode(jsonString))!;
-  }
-
-  static Serializer<Item> get serializer => _$itemSerializer;
 }
 
 abstract class Disk implements Built<Disk, DiskBuilder> {

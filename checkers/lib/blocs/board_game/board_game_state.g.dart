@@ -9,7 +9,6 @@ part of 'board_game_state.dart';
 Serializer<BoardGameState> _$boardGameStateSerializer =
     new _$BoardGameStateSerializer();
 Serializer<Field> _$fieldSerializer = new _$FieldSerializer();
-Serializer<Item<Object?>> _$itemSerializer = new _$ItemSerializer();
 Serializer<Disk> _$diskSerializer = new _$DiskSerializer();
 Serializer<Player> _$playerSerializer = new _$PlayerSerializer();
 
@@ -91,18 +90,10 @@ class _$FieldSerializer implements StructuredSerializer<Field> {
     final result = <Object?>[
       'items',
       serializers.serialize(object.items,
-          specifiedType: const FullType(BuiltList, const [
-            const FullType(Item, const [const FullType(Object)])
-          ])),
+          specifiedType:
+              const FullType(BuiltList, const [const FullType(Object)])),
     ];
-    Object? value;
-    value = object.disk;
-    if (value != null) {
-      result
-        ..add('disk')
-        ..add(
-            serializers.serialize(value, specifiedType: const FullType(Disk)));
-    }
+
     return result;
   }
 
@@ -117,59 +108,11 @@ class _$FieldSerializer implements StructuredSerializer<Field> {
       iterator.moveNext();
       final Object? value = iterator.current;
       switch (key) {
-        case 'disk':
-          result.disk.replace(serializers.deserialize(value,
-              specifiedType: const FullType(Disk))! as Disk);
-          break;
         case 'items':
           result.items.replace(serializers.deserialize(value,
-              specifiedType: const FullType(BuiltList, const [
-                const FullType(Item, const [const FullType(Object)])
-              ]))! as BuiltList<Object?>);
-          break;
-      }
-    }
-
-    return result.build();
-  }
-}
-
-class _$ItemSerializer implements StructuredSerializer<Item<Object?>> {
-  @override
-  final Iterable<Type> types = const [Item, _$Item];
-  @override
-  final String wireName = 'Item';
-
-  @override
-  Iterable<Object?> serialize(Serializers serializers, Item<Object?> object,
-      {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object?>[];
-    Object? value;
-    value = object.player;
-    if (value != null) {
-      result
-        ..add('player')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(Player)));
-    }
-    return result;
-  }
-
-  @override
-  Item<Object?> deserialize(
-      Serializers serializers, Iterable<Object?> serialized,
-      {FullType specifiedType = FullType.unspecified}) {
-    final result = new ItemBuilder<Object?>();
-
-    final iterator = serialized.iterator;
-    while (iterator.moveNext()) {
-      final key = iterator.current as String;
-      iterator.moveNext();
-      final Object? value = iterator.current;
-      switch (key) {
-        case 'player':
-          result.player.replace(serializers.deserialize(value,
-              specifiedType: const FullType(Player))! as Player);
+                  specifiedType: const FullType(
+                      BuiltList, const [const FullType(Object)]))!
+              as BuiltList<Object?>);
           break;
       }
     }
@@ -388,14 +331,12 @@ class BoardGameStateBuilder
 
 class _$Field extends Field {
   @override
-  final Disk? disk;
-  @override
-  final BuiltList<Item<Object>> items;
+  final BuiltList<Object> items;
 
   factory _$Field([void Function(FieldBuilder)? updates]) =>
       (new FieldBuilder()..update(updates)).build();
 
-  _$Field._({this.disk, required this.items}) : super._() {
+  _$Field._({required this.items}) : super._() {
     BuiltValueNullFieldError.checkNotNull(items, 'Field', 'items');
   }
 
@@ -409,19 +350,17 @@ class _$Field extends Field {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is Field && disk == other.disk && items == other.items;
+    return other is Field && items == other.items;
   }
 
   @override
   int get hashCode {
-    return $jf($jc($jc(0, disk.hashCode), items.hashCode));
+    return $jf($jc(0, items.hashCode));
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('Field')
-          ..add('disk', disk)
-          ..add('items', items))
+    return (newBuiltValueToStringHelper('Field')..add('items', items))
         .toString();
   }
 }
@@ -429,21 +368,15 @@ class _$Field extends Field {
 class FieldBuilder implements Builder<Field, FieldBuilder> {
   _$Field? _$v;
 
-  DiskBuilder? _disk;
-  DiskBuilder get disk => _$this._disk ??= new DiskBuilder();
-  set disk(DiskBuilder? disk) => _$this._disk = disk;
-
-  ListBuilder<Item<Object>>? _items;
-  ListBuilder<Item<Object>> get items =>
-      _$this._items ??= new ListBuilder<Item<Object>>();
-  set items(ListBuilder<Item<Object>>? items) => _$this._items = items;
+  ListBuilder<Object>? _items;
+  ListBuilder<Object> get items => _$this._items ??= new ListBuilder<Object>();
+  set items(ListBuilder<Object>? items) => _$this._items = items;
 
   FieldBuilder();
 
   FieldBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
-      _disk = $v.disk?.toBuilder();
       _items = $v.items.toBuilder();
       _$v = null;
     }
@@ -465,106 +398,15 @@ class FieldBuilder implements Builder<Field, FieldBuilder> {
   _$Field build() {
     _$Field _$result;
     try {
-      _$result =
-          _$v ?? new _$Field._(disk: _disk?.build(), items: items.build());
+      _$result = _$v ?? new _$Field._(items: items.build());
     } catch (_) {
       late String _$failedField;
       try {
-        _$failedField = 'disk';
-        _disk?.build();
         _$failedField = 'items';
         items.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'Field', _$failedField, e.toString());
-      }
-      rethrow;
-    }
-    replace(_$result);
-    return _$result;
-  }
-}
-
-class _$Item<T> extends Item<T> {
-  @override
-  final Player? player;
-
-  factory _$Item([void Function(ItemBuilder<T>)? updates]) =>
-      (new ItemBuilder<T>()..update(updates)).build();
-
-  _$Item._({this.player}) : super._() {
-    if (T == dynamic) {
-      throw new BuiltValueMissingGenericsError('Item', 'T');
-    }
-  }
-
-  @override
-  Item<T> rebuild(void Function(ItemBuilder<T>) updates) =>
-      (toBuilder()..update(updates)).build();
-
-  @override
-  ItemBuilder<T> toBuilder() => new ItemBuilder<T>()..replace(this);
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is Item && player == other.player;
-  }
-
-  @override
-  int get hashCode {
-    return $jf($jc(0, player.hashCode));
-  }
-
-  @override
-  String toString() {
-    return (newBuiltValueToStringHelper('Item')..add('player', player))
-        .toString();
-  }
-}
-
-class ItemBuilder<T> implements Builder<Item<T>, ItemBuilder<T>> {
-  _$Item<T>? _$v;
-
-  PlayerBuilder? _player;
-  PlayerBuilder get player => _$this._player ??= new PlayerBuilder();
-  set player(PlayerBuilder? player) => _$this._player = player;
-
-  ItemBuilder();
-
-  ItemBuilder<T> get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _player = $v.player?.toBuilder();
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(Item<T> other) {
-    ArgumentError.checkNotNull(other, 'other');
-    _$v = other as _$Item<T>;
-  }
-
-  @override
-  void update(void Function(ItemBuilder<T>)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  _$Item<T> build() {
-    _$Item<T> _$result;
-    try {
-      _$result = _$v ?? new _$Item<T>._(player: _player?.build());
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'player';
-        _player?.build();
-      } catch (e) {
-        throw new BuiltValueNestedFieldError(
-            'Item', _$failedField, e.toString());
       }
       rethrow;
     }

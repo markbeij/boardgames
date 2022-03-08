@@ -36,7 +36,7 @@ abstract class RulesBaseHelper {
 
       final disk = DiskBuilder();
       disk.player = player;
-      field.disk = disk;
+      field.items.add(disk.build());
 
       state.fields[i] = field.build();
     }
