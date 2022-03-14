@@ -21,7 +21,7 @@ class FourInARowRules implements RulesBase {
   }
 
   @override
-  BoardGameState createInitialState() {
+  PlayingState createInitialState() {
     final initialState = RulesBaseHelper.createInitialStateBase(this);
 
     return initialState.build();
@@ -34,15 +34,11 @@ class FourInARowRules implements RulesBase {
   int get initialPlayerCount => _initialPlayerCount;
 
   @override
-  move(MoveEvent event, Emitter<BoardGameState> emit, BoardGameState state) {
+  move(MoveEvent event, Emitter<BoardGameState> emit, PlayingState state) {
     if (event.hops.isEmpty) {
       log('No hop');
       return;
     }
-    // if (event.hops.length != 1) {
-    //   log('Only one hop is allowed');
-    //   return;
-    // }
 
     if (state.fields[event.hops.last].items.isNotEmpty) {
       log('There is already a disk at this position');
@@ -50,7 +46,7 @@ class FourInARowRules implements RulesBase {
     }
 
     final rowLength = math.sqrt(state.fields.length).toInt();
-    if (event.hops.last <= state.fields.length - rowLength) {
+    if (event.hops.last < state.fields.length - rowLength) {
       if (state.fields[event.hops.last + rowLength].items.isEmpty) {
         log('Not on lowest row possible');
         return;
@@ -75,11 +71,12 @@ class FourInARowRules implements RulesBase {
 
     emit(resultState);
 
-    //Check for win
+    //TODO: Check for win
 
     //Check for stalemate
-    if (!resultState.fields.any((p0) => p0.items.isNotEmpty)) {
-      //emit stale mate
+    if (!resultState.fields.any((p0) => p0.items.isEmpty)) {
+      //emit stalemate
+      emit(FinishedState());
     }
   }
 }

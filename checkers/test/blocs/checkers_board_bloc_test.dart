@@ -13,8 +13,8 @@ void main() {
     });
 
     test('equality test CheckersBoardState', () {
-      final val1 = BoardGameState((b) => b);
-      final val2 = BoardGameState((b) => b);
+      final val1 = PlayingState((b) => b);
+      final val2 = PlayingState((b) => b);
 
       expect(val1, val2);
     });

@@ -7,10 +7,11 @@ part of 'serializers.dart';
 // **************************************************************************
 
 Serializers _$serializers = (new Serializers().toBuilder()
-      ..add(BoardGameState.serializer)
       ..add(Disk.serializer)
       ..add(Field.serializer)
+      ..add(FinishedState.serializer)
       ..add(Player.serializer)
+      ..add(PlayingState.serializer)
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Field)]),
           () => new ListBuilder<Field>())

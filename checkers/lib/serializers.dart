@@ -7,7 +7,9 @@ part 'serializers.g.dart';
 /// Collection of generated serializers for the built_value chat example.
 @SerializersFor([
   BoardGameEvent,
-  BoardGameState,
+  PlayingState,
+  FinishedState,
+  Field,
   Disk,
   Player,
 ])

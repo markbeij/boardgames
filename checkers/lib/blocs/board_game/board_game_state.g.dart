@@ -6,21 +6,66 @@ part of 'board_game_state.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
-Serializer<BoardGameState> _$boardGameStateSerializer =
-    new _$BoardGameStateSerializer();
+Serializer<FinishedState> _$finishedStateSerializer =
+    new _$FinishedStateSerializer();
+Serializer<PlayingState> _$playingStateSerializer =
+    new _$PlayingStateSerializer();
 Serializer<Field> _$fieldSerializer = new _$FieldSerializer();
 Serializer<Disk> _$diskSerializer = new _$DiskSerializer();
 Serializer<Player> _$playerSerializer = new _$PlayerSerializer();
 
-class _$BoardGameStateSerializer
-    implements StructuredSerializer<BoardGameState> {
+class _$FinishedStateSerializer implements StructuredSerializer<FinishedState> {
   @override
-  final Iterable<Type> types = const [BoardGameState, _$BoardGameState];
+  final Iterable<Type> types = const [FinishedState, _$FinishedState];
   @override
-  final String wireName = 'BoardGameState';
+  final String wireName = 'FinishedState';
 
   @override
-  Iterable<Object?> serialize(Serializers serializers, BoardGameState object,
+  Iterable<Object?> serialize(Serializers serializers, FinishedState object,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = <Object?>[];
+    Object? value;
+    value = object.playerWon;
+    if (value != null) {
+      result
+        ..add('playerWon')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(Player)));
+    }
+    return result;
+  }
+
+  @override
+  FinishedState deserialize(
+      Serializers serializers, Iterable<Object?> serialized,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = new FinishedStateBuilder();
+
+    final iterator = serialized.iterator;
+    while (iterator.moveNext()) {
+      final key = iterator.current as String;
+      iterator.moveNext();
+      final Object? value = iterator.current;
+      switch (key) {
+        case 'playerWon':
+          result.playerWon.replace(serializers.deserialize(value,
+              specifiedType: const FullType(Player))! as Player);
+          break;
+      }
+    }
+
+    return result.build();
+  }
+}
+
+class _$PlayingStateSerializer implements StructuredSerializer<PlayingState> {
+  @override
+  final Iterable<Type> types = const [PlayingState, _$PlayingState];
+  @override
+  final String wireName = 'PlayingState';
+
+  @override
+  Iterable<Object?> serialize(Serializers serializers, PlayingState object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object?>[
       'fields',
@@ -44,10 +89,10 @@ class _$BoardGameStateSerializer
   }
 
   @override
-  BoardGameState deserialize(
+  PlayingState deserialize(
       Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = new BoardGameStateBuilder();
+    final result = new PlayingStateBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
@@ -206,7 +251,93 @@ class _$PlayerSerializer implements StructuredSerializer<Player> {
   }
 }
 
-class _$BoardGameState extends BoardGameState {
+class _$FinishedState extends FinishedState {
+  @override
+  final Player? playerWon;
+
+  factory _$FinishedState([void Function(FinishedStateBuilder)? updates]) =>
+      (new FinishedStateBuilder()..update(updates)).build();
+
+  _$FinishedState._({this.playerWon}) : super._();
+
+  @override
+  FinishedState rebuild(void Function(FinishedStateBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
+
+  @override
+  FinishedStateBuilder toBuilder() => new FinishedStateBuilder()..replace(this);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(other, this)) return true;
+    return other is FinishedState && playerWon == other.playerWon;
+  }
+
+  @override
+  int get hashCode {
+    return $jf($jc(0, playerWon.hashCode));
+  }
+
+  @override
+  String toString() {
+    return (newBuiltValueToStringHelper('FinishedState')
+          ..add('playerWon', playerWon))
+        .toString();
+  }
+}
+
+class FinishedStateBuilder
+    implements Builder<FinishedState, FinishedStateBuilder> {
+  _$FinishedState? _$v;
+
+  PlayerBuilder? _playerWon;
+  PlayerBuilder get playerWon => _$this._playerWon ??= new PlayerBuilder();
+  set playerWon(PlayerBuilder? playerWon) => _$this._playerWon = playerWon;
+
+  FinishedStateBuilder();
+
+  FinishedStateBuilder get _$this {
+    final $v = _$v;
+    if ($v != null) {
+      _playerWon = $v.playerWon?.toBuilder();
+      _$v = null;
+    }
+    return this;
+  }
+
+  @override
+  void replace(FinishedState other) {
+    ArgumentError.checkNotNull(other, 'other');
+    _$v = other as _$FinishedState;
+  }
+
+  @override
+  void update(void Function(FinishedStateBuilder)? updates) {
+    if (updates != null) updates(this);
+  }
+
+  @override
+  _$FinishedState build() {
+    _$FinishedState _$result;
+    try {
+      _$result = _$v ?? new _$FinishedState._(playerWon: _playerWon?.build());
+    } catch (_) {
+      late String _$failedField;
+      try {
+        _$failedField = 'playerWon';
+        _playerWon?.build();
+      } catch (e) {
+        throw new BuiltValueNestedFieldError(
+            'FinishedState', _$failedField, e.toString());
+      }
+      rethrow;
+    }
+    replace(_$result);
+    return _$result;
+  }
+}
+
+class _$PlayingState extends PlayingState {
   @override
   final BuiltList<Field> fields;
   @override
@@ -214,28 +345,27 @@ class _$BoardGameState extends BoardGameState {
   @override
   final Player? activePlayer;
 
-  factory _$BoardGameState([void Function(BoardGameStateBuilder)? updates]) =>
-      (new BoardGameStateBuilder()..update(updates)).build();
+  factory _$PlayingState([void Function(PlayingStateBuilder)? updates]) =>
+      (new PlayingStateBuilder()..update(updates)).build();
 
-  _$BoardGameState._(
+  _$PlayingState._(
       {required this.fields, required this.players, this.activePlayer})
       : super._() {
-    BuiltValueNullFieldError.checkNotNull(fields, 'BoardGameState', 'fields');
-    BuiltValueNullFieldError.checkNotNull(players, 'BoardGameState', 'players');
+    BuiltValueNullFieldError.checkNotNull(fields, 'PlayingState', 'fields');
+    BuiltValueNullFieldError.checkNotNull(players, 'PlayingState', 'players');
   }
 
   @override
-  BoardGameState rebuild(void Function(BoardGameStateBuilder) updates) =>
+  PlayingState rebuild(void Function(PlayingStateBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  BoardGameStateBuilder toBuilder() =>
-      new BoardGameStateBuilder()..replace(this);
+  PlayingStateBuilder toBuilder() => new PlayingStateBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is BoardGameState &&
+    return other is PlayingState &&
         fields == other.fields &&
         players == other.players &&
         activePlayer == other.activePlayer;
@@ -249,7 +379,7 @@ class _$BoardGameState extends BoardGameState {
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('BoardGameState')
+    return (newBuiltValueToStringHelper('PlayingState')
           ..add('fields', fields)
           ..add('players', players)
           ..add('activePlayer', activePlayer))
@@ -257,9 +387,9 @@ class _$BoardGameState extends BoardGameState {
   }
 }
 
-class BoardGameStateBuilder
-    implements Builder<BoardGameState, BoardGameStateBuilder> {
-  _$BoardGameState? _$v;
+class PlayingStateBuilder
+    implements Builder<PlayingState, PlayingStateBuilder> {
+  _$PlayingState? _$v;
 
   ListBuilder<Field>? _fields;
   ListBuilder<Field> get fields => _$this._fields ??= new ListBuilder<Field>();
@@ -276,9 +406,9 @@ class BoardGameStateBuilder
   set activePlayer(PlayerBuilder? activePlayer) =>
       _$this._activePlayer = activePlayer;
 
-  BoardGameStateBuilder();
+  PlayingStateBuilder();
 
-  BoardGameStateBuilder get _$this {
+  PlayingStateBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
       _fields = $v.fields.toBuilder();
@@ -290,22 +420,22 @@ class BoardGameStateBuilder
   }
 
   @override
-  void replace(BoardGameState other) {
+  void replace(PlayingState other) {
     ArgumentError.checkNotNull(other, 'other');
-    _$v = other as _$BoardGameState;
+    _$v = other as _$PlayingState;
   }
 
   @override
-  void update(void Function(BoardGameStateBuilder)? updates) {
+  void update(void Function(PlayingStateBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$BoardGameState build() {
-    _$BoardGameState _$result;
+  _$PlayingState build() {
+    _$PlayingState _$result;
     try {
       _$result = _$v ??
-          new _$BoardGameState._(
+          new _$PlayingState._(
               fields: fields.build(),
               players: players.build(),
               activePlayer: _activePlayer?.build());
@@ -320,7 +450,7 @@ class BoardGameStateBuilder
         _activePlayer?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'BoardGameState', _$failedField, e.toString());
+            'PlayingState', _$failedField, e.toString());
       }
       rethrow;
     }

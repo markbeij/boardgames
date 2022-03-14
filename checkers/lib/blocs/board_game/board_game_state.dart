@@ -7,25 +7,46 @@ import 'package:built_collection/built_collection.dart';
 
 part 'board_game_state.g.dart';
 
-abstract class BoardGameState implements Built<BoardGameState, BoardGameStateBuilder> {
+abstract class BoardGameState {}
+
+abstract class FinishedState implements BoardGameState, Built<FinishedState, FinishedStateBuilder> {
+  // Fields
+  Player? get playerWon;
+
+  FinishedState._();
+
+  factory FinishedState([void Function(FinishedStateBuilder) updates]) = _$FinishedState;
+
+  String toJson() {
+    return json.encode(serializers.serializeWith(FinishedState.serializer, this));
+  }
+
+  static FinishedState fromJson(String jsonString) {
+    return serializers.deserializeWith(FinishedState.serializer, json.decode(jsonString))!;
+  }
+
+  static Serializer<FinishedState> get serializer => _$finishedStateSerializer;
+}
+
+abstract class PlayingState implements BoardGameState, Built<PlayingState, PlayingStateBuilder> {
   // Fields
   BuiltList<Field> get fields;
   BuiltList<Player> get players;
   Player? get activePlayer;
 
-  BoardGameState._();
+  PlayingState._();
 
-  factory BoardGameState([void Function(BoardGameStateBuilder) updates]) = _$BoardGameState;
+  factory PlayingState([void Function(PlayingStateBuilder) updates]) = _$PlayingState;
 
   String toJson() {
-    return json.encode(serializers.serializeWith(BoardGameState.serializer, this));
+    return json.encode(serializers.serializeWith(PlayingState.serializer, this));
   }
 
-  static BoardGameState fromJson(String jsonString) {
-    return serializers.deserializeWith(BoardGameState.serializer, json.decode(jsonString))!;
+  static PlayingState fromJson(String jsonString) {
+    return serializers.deserializeWith(PlayingState.serializer, json.decode(jsonString))!;
   }
 
-  static Serializer<BoardGameState> get serializer => _$boardGameStateSerializer;
+  static Serializer<PlayingState> get serializer => _$playingStateSerializer;
 }
 
 abstract class Field implements Built<Field, FieldBuilder> {

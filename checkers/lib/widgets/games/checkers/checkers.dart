@@ -1,9 +1,8 @@
-import 'dart:math';
+import 'dart:math' as math;
 import 'package:checkers/blocs/rules/rules_base.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:checkers/blocs/rules/classic_checkers_rules.dart';
 import 'package:checkers/blocs/board_game/board_game.dart';
 import 'package:checkers/blocs/move/move.dart';
 
@@ -24,7 +23,10 @@ class CheckersWidget extends StatelessWidget {
       ],
       child: Column(children: [
         BlocBuilder<BoardGameBloc, BoardGameState>(builder: (context, state) {
-          final dimensions = sqrt(state.fields.length).toInt();
+          // log('Beij - draw (${state.runtimeType})');
+          final playing = state is PlayingState;
+          if (!playing) return Container();
+          final dimensions = math.sqrt(state.fields.length).toInt();
           return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             Table(
               border: const TableBorder(

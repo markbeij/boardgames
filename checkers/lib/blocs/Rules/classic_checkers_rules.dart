@@ -24,7 +24,7 @@ class ClassicCheckersRules implements RulesBase {
   int get initialPlayerCount => _initialPlayerCount;
 
   @override
-  move(MoveEvent event, Emitter<BoardGameState> emit, BoardGameState state) {
+  move(MoveEvent event, Emitter<BoardGameState> emit, PlayingState state) {
     if (event.hops.isEmpty) {
       log('No hops, so no state is changed');
       return;
@@ -98,7 +98,7 @@ class ClassicCheckersRules implements RulesBase {
   }
 
   @override
-  BoardGameState createInitialState() {
+  PlayingState createInitialState() {
     final initialState = RulesBaseHelper.createInitialStateBase(this);
 
     final p1 = initialState.players[0].toBuilder();

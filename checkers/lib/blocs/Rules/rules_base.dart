@@ -5,8 +5,8 @@ import 'package:checkers/blocs/board_game/board_game.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 abstract class RulesBaseHelper {
-  static BoardGameStateBuilder createInitialStateBase(RulesBase rules) {
-    final initialState = BoardGameStateBuilder();
+  static PlayingStateBuilder createInitialStateBase(RulesBase rules) {
+    final initialState = PlayingStateBuilder();
 
     //Create players
     final players = ListBuilder<Player>();
@@ -26,7 +26,7 @@ abstract class RulesBaseHelper {
     return initialState;
   }
 
-  static void addDisks(BoardGameStateBuilder state, int from, int till, PlayerBuilder player) {
+  static void addDisks(PlayingStateBuilder state, int from, int till, PlayerBuilder player) {
     final rowLength = sqrt(state.fields.length).toInt();
     for (var i = from; i < till; i++) {
       var ii = i ~/ rowLength % 2 == 1;
@@ -47,6 +47,6 @@ abstract class RulesBase {
   int get initialBoardSize;
   int get initialPlayerCount;
 
-  move(MoveEvent event, Emitter<BoardGameState> emit, BoardGameState state);
-  BoardGameState createInitialState();
+  move(MoveEvent event, Emitter<BoardGameState> emit, PlayingState state);
+  PlayingState createInitialState();
 }
