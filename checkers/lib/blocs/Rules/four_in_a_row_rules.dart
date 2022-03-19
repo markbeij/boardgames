@@ -71,12 +71,127 @@ class FourInARowRules implements RulesBase {
 
     emit(resultState);
 
-    //TODO: Check for win
+    //Check horizontal win
+    var won = checkHorizontalWin(event.hops.last, state);
+
+    if (won) {
+      emit(FinishedState((b) => b.playerWon = state.activePlayer!.toBuilder()));
+      return;
+    }
+
+    //Check for vertical win
+    won = checkverticalWin(event.hops.last, state);
+
+    if (won) {
+      emit(FinishedState((b) => b.playerWon = state.activePlayer!.toBuilder()));
+      return;
+    }
+
+    //Check for diagonal win
+    won = checkDiagonalWin(event.hops.last, state);
+
+    if (won) {
+      emit(FinishedState((b) => b.playerWon = state.activePlayer!.toBuilder()));
+      return;
+    }
 
     //Check for stalemate
     if (!resultState.fields.any((p0) => p0.items.isEmpty)) {
       //emit stalemate
       emit(FinishedState());
     }
+  }
+
+  bool checkHorizontalWin(int hop, PlayingState state) {
+    var count = 1;
+    //Check items of same player on the left side of the current disk
+    for (var i = 1; i < 4; i++) {
+      if (hop - i < 0) break;
+      if (state.fields[hop - i].items.any((p0) => p0 is Disk && p0.player == state.activePlayer)) {
+        count++;
+      } else {
+        break;
+      }
+    }
+
+    //Check items of same player on the right side of the current disk
+    for (var i = 1; i < 4; i++) {
+      if (hop + i > state.fields.length - 1) break;
+      if (state.fields[hop + i].items.any((p0) => p0 is Disk && p0.player == state.activePlayer)) {
+        count++;
+      } else {
+        break;
+      }
+    }
+
+    return count >= 4;
+  }
+
+  bool checkverticalWin(int hop, PlayingState state) {
+    var count = 1;
+    final rowLength = math.sqrt(state.fields.length).toInt();
+
+    //Check items of same player below the current disk
+    for (var i = 1; i < 4; i++) {
+      if (hop + (i * rowLength) > state.fields.length - 1) break;
+      if (state.fields[hop + (i * rowLength)].items.any((p0) => p0 is Disk && p0.player == state.activePlayer)) {
+        count++;
+      } else {
+        break;
+      }
+    }
+
+    return count >= 4;
+  }
+
+  bool checkDiagonalWin(int hop, PlayingState state) {
+    var count = 1;
+    final rowLength = math.sqrt(state.fields.length).toInt();
+
+    //Check items to the top left side of the current disk
+    for (var i = 1; i < 4; i++) {
+      if (hop - i - (i * rowLength) < 0) break;
+      if (state.fields[hop - i - (i * rowLength)].items.any((p0) => p0 is Disk && p0.player == state.activePlayer)) {
+        count++;
+      } else {
+        break;
+      }
+    }
+
+    //Check items to the bottom right of the current disk
+    for (var i = 1; i < 4; i++) {
+      if (hop + i + (i * rowLength) > state.fields.length - 1) break;
+      if (state.fields[hop + i + (i * rowLength)].items.any((p0) => p0 is Disk && p0.player == state.activePlayer)) {
+        count++;
+      } else {
+        break;
+      }
+    }
+
+    if (count >= 4) return true;
+
+    count = 1;
+
+    //Check items to the top right side of the current disk
+    for (var i = 1; i < 4; i++) {
+      if (hop + i - (i * rowLength) < 0) break;
+      if (state.fields[hop + i - (i * rowLength)].items.any((p0) => p0 is Disk && p0.player == state.activePlayer)) {
+        count++;
+      } else {
+        break;
+      }
+    }
+
+    //Check items to the bottom left of the current disk
+    for (var i = 1; i < 4; i++) {
+      if (hop - i + (i * rowLength) > state.fields.length - 1) break;
+      if (state.fields[hop - i + (i * rowLength)].items.any((p0) => p0 is Disk && p0.player == state.activePlayer)) {
+        count++;
+      } else {
+        break;
+      }
+    }
+
+    return count >= 4;
   }
 }
