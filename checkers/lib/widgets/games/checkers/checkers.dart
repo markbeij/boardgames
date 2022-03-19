@@ -23,75 +23,75 @@ class CheckersWidget extends StatelessWidget {
       ],
       child: Column(children: [
         BlocBuilder<BoardGameBloc, BoardGameState>(builder: (context, state) {
-          return Column(
-            children: [
-              if (state is FinishedState) Text(state.playerWon == null ? 'Draw!' : '${state.playerWon!.name} wins!'),
-              if (state is PlayingState)
-                (() {
-                  final dimensions = math.sqrt(state.fields.length).toInt();
-
-                  return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    Table(
-                      border: const TableBorder(
-                        horizontalInside: BorderSide(),
-                        verticalInside: BorderSide(),
-                      ),
-                      children: List.generate(dimensions, (y) {
-                        return TableRow(
-                            children: List.generate(dimensions, (x) {
-                          final index = (y * dimensions) + x;
-                          Color color;
-                          if (index % 2 == 0) {
-                            color = y % 2 == 0 ? Colors.amber : Colors.blueGrey;
-                          } else {
-                            color = y % 2 == 0 ? Colors.blueGrey : Colors.amber;
-                          }
-                          return GestureDetector(
-                              onTap: () {
-                                BlocProvider.of<MoveBloc>(context).add(AddHopEvent((b) => b.hop = index));
-                              },
-                              child: AspectRatio(
-                                  aspectRatio: 1,
-                                  child: Container(
-                                    color: color,
-                                    alignment: Alignment.center,
-                                    child: Stack(children: [
-                                      if (state.fields[index].items.isNotEmpty)
-                                        DiskWidget(
-                                          color: (state.fields[index].items.first as Disk).player.name == 'Player_1' ? Colors.green : Colors.blue,
-                                          onTap: () {
-                                            BlocProvider.of<MoveBloc>(context).add(ResetHopsEvent());
-                                            BlocProvider.of<MoveBloc>(context).add(AddHopEvent((b) => b.hop = index));
-                                          },
-                                        ),
-                                      Text(index.toString()),
-                                    ]),
-                                  )));
-                        }));
-                      }),
-                    ),
-                    InkWell(
-                      child: const Text('Move'),
-                      onTap: () {
-                        final moveState = BlocProvider.of<MoveBloc>(context).state;
-                        BlocProvider.of<BoardGameBloc>(context).add(MoveEvent((b) => b..hops.addAll(moveState.hops)));
-                      },
-                    ),
-                    InkWell(
-                      child: const Text('Reset'),
-                      onTap: () {
-                        BlocProvider.of<BoardGameBloc>(context).add(ResetCheckersBoardEvent());
-                      },
-                    ),
-                    Text(
-                      "It's ${state.activePlayer?.name}'s turn",
-                      style: TextStyle(color: state.activePlayer?.name == 'Player_1' ? Colors.green : Colors.blue),
-                    ),
-                  ]);
-                }())
-            ],
-          );
+          return state is FinishedState ? Text(state.playerWon == null ? 'Draw!' : '${state.playerWon!.name} wins!') : Container();
         }),
+        BlocBuilder<BoardGameBloc, BoardGameState>(
+            buildWhen: (previous, current) => current is PlayingState,
+            builder: (context, state) {
+              return state is PlayingState
+                  ? (() {
+                      final dimensions = math.sqrt(state.fields.length).toInt();
+                      return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                        Table(
+                          border: const TableBorder(
+                            horizontalInside: BorderSide(),
+                            verticalInside: BorderSide(),
+                          ),
+                          children: List.generate(dimensions, (y) {
+                            return TableRow(
+                                children: List.generate(dimensions, (x) {
+                              final index = (y * dimensions) + x;
+                              Color color;
+                              if (index % 2 == 0) {
+                                color = y % 2 == 0 ? Colors.amber : Colors.blueGrey;
+                              } else {
+                                color = y % 2 == 0 ? Colors.blueGrey : Colors.amber;
+                              }
+                              return GestureDetector(
+                                  onTap: () {
+                                    BlocProvider.of<MoveBloc>(context).add(AddHopEvent((b) => b.hop = index));
+                                  },
+                                  child: AspectRatio(
+                                      aspectRatio: 1,
+                                      child: Container(
+                                        color: color,
+                                        alignment: Alignment.center,
+                                        child: Stack(children: [
+                                          if (state.fields[index].items.isNotEmpty)
+                                            DiskWidget(
+                                              color: (state.fields[index].items.first as Disk).player.name == 'Player_1' ? Colors.green : Colors.blue,
+                                              onTap: () {
+                                                BlocProvider.of<MoveBloc>(context).add(ResetHopsEvent());
+                                                BlocProvider.of<MoveBloc>(context).add(AddHopEvent((b) => b.hop = index));
+                                              },
+                                            ),
+                                          Text(index.toString()),
+                                        ]),
+                                      )));
+                            }));
+                          }),
+                        ),
+                        InkWell(
+                          child: const Text('Move'),
+                          onTap: () {
+                            final moveState = BlocProvider.of<MoveBloc>(context).state;
+                            BlocProvider.of<BoardGameBloc>(context).add(MoveEvent((b) => b..hops.addAll(moveState.hops)));
+                          },
+                        ),
+                        InkWell(
+                          child: const Text('Reset'),
+                          onTap: () {
+                            BlocProvider.of<BoardGameBloc>(context).add(ResetCheckersBoardEvent());
+                          },
+                        ),
+                        Text(
+                          "It's ${state.activePlayer?.name}'s turn",
+                          style: TextStyle(color: state.activePlayer?.name == 'Player_1' ? Colors.green : Colors.blue),
+                        ),
+                      ]);
+                    }())
+                  : Container();
+            }),
         BlocBuilder<MoveBloc, MoveState>(builder: (context, state) {
           return Column(
             children: [
