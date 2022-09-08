@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:checkers/blocs/move/move.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

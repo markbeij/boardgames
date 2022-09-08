@@ -12,7 +12,7 @@ class SimpleBlocObserver extends BlocObserver {
 
   @override
   void onTransition(Bloc bloc, Transition transition) async {
-    log('onTransition for BLoC: ${bloc.runtimeType}. from currentState: ${transition.currentState.runtimeType} to ${transition.nextState.runtimeType} by ${transition.event.runtimeType}');
+    log('onTransition for BLoC: ${bloc.runtimeType}. from currentState: ${transition.currentState} to ${transition.nextState} by ${transition.event.runtimeType}');
 
     super.onTransition(bloc, transition);
   }
