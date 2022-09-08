@@ -62,10 +62,14 @@ class ClassicCheckersRules implements RulesBase {
           return;
         }
         //Check if disk is moved one place diagonal forwards
-        final rowLength = math.sqrt(state.fields.length);
+        final rowLength = math.sqrt(state.fields.length).toInt();
         if (disk.player.name == 'Player_1') {
-          if (event.hops[i] != event.hops[i - 1] + rowLength - 1 && event.hops[i] != event.hops[i - 1] + rowLength + 1) {
+          if (!((event.hops[i] == event.hops[i - 1] + (rowLength * 1) - 1) ||
+              (event.hops[i] == event.hops[i - 1] + (rowLength * 1) + 1) ||
+              (event.hops[i] == event.hops[i - 1] + (rowLength * 2) - 2 && state.fields[event.hops[i - 1] + (rowLength * 1) - 1].items.any((p0) => p0 is Disk && p0.player.name != 'Player_1')) ||
+              (event.hops[i] == event.hops[i - 1] + (rowLength * 2) + 2 && state.fields[event.hops[i - 1] + (rowLength * 1) + 1].items.any((p0) => p0 is Disk && p0.player.name != 'Player_1')))) {
             log('Invalid move for Player_1 (from ${event.hops[i - 1]} to ${event.hops[i]})');
+            log('xx${event.hops[i - 1] + (rowLength * 1) + 1}');
             return;
           }
         }
